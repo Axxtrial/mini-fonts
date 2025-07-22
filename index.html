@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unicode Text Generator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #2c2c2c; /* Dark background */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 20px;
+            color: #f0f0f0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            max-width: 600px; /* Smaller max-width for this focused tool */
+            background-color: #3a3a3a;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .input-section {
+            background-color: #4a4a4a;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #5a5a5a;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px 12px;
+            margin-top: 8px;
+            border-radius: 6px;
+            border: 1px solid #6b7280;
+            background-color: #3b3b3b;
+            color: #f0f0f0;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #8855FF;
+        }
+
+        .small-caps-output {
+            font-size: 1.5rem; /* Larger for better visibility */
+            margin-top: 10px;
+            background-color: #3b3b3b;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #6b7280;
+            color: #FFFF55; /* Distinctive output color */
+            min-height: 60px; /* Taller for more content */
+            display: flex;
+            align-items: center;
+            word-break: break-all; /* Ensures long strings wrap */
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 lg:p-12">
+    <div class="container">
+        <h1 class="text-3xl font-bold text-center mb-6">Unicode Text Generator</h1>
+
+        <div class="input-section">
+            <h2 class="text-xl font-semibold mb-4">Type your text here</h2>
+            <div>
+                <label for="smallCapsTextInput" class="block text-sm font-medium text-gray-300">Enter text to convert:</label>
+                <input type="text" id="smallCapsTextInput" value="" class="mt-1" placeholder="Your text here!">
+            </div>
+            <div class="mt-4">
+                <label class="block text-sm font-medium text-gray-300">Converted text (copy and paste):</label>
+                <div id="displaySmallCapsText" class="small-caps-output"></div>
+            </div>
+            <p class="text-sm text-gray-400 mt-4">
+                This generator uses special Unicode characters to mimic a text style.
+                Appearance may vary slightly depending on the font used by your system or application.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const smallCapsTextInput = document.getElementById('smallCapsTextInput');
+        const displaySmallCapsText = document.getElementById('displaySmallCapsText');
+
+        // Map for "small caps" Unicode characters (Small Caps and other phonetic/Latin symbols)
+        const smallCapsMap = {
+            'a': 'ᴀ', 'b': 'ʙ', 'c': 'ᴄ', 'd': 'ᴅ', 'e': 'ᴇ', 'f': 'ғ', 'g': 'ɢ', 'h': 'ʜ', 'i': 'ɪ',
+            'j': 'ᴊ', 'k': 'ᴋ', 'l': 'ʟ', 'm': 'ᴍ', 'n': 'ɴ', 'o': 'ᴏ', 'p': 'ᴘ', 'q': 'ǫ', 'r': 'ʀ',
+            's': 's', 't': 'ᴛ', 'u': 'ᴜ', 'v': 'ᴠ', 'w': 'ᴡ', 'x': 'x', 'y': 'ʏ', 'z': 'ᴢ',
+            'A': 'ᴀ', 'B': 'ʙ', 'C': 'ᴄ', 'D': 'ᴅ', 'E': 'ᴇ', 'F': 'ғ', 'G': 'ɢ', 'H': 'ʜ', 'I': 'ɪ',
+            'J': 'ᴊ', 'K': 'ᴋ', 'L': 'ʟ', 'M': 'ᴍ', 'N': 'ɴ', 'O': 'ᴏ', 'P': 'ᴘ', 'Q': 'ǫ', 'R': 'ʀ',
+            'S': 's', 'T': 'ᴛ', 'U': 'ᴜ', 'V': 'ᴠ', 'W': 'ᴡ', 'X': 'x', 'Y': 'ʏ', 'Z': 'ᴢ',
+            ' ': ' ', // Keep spaces
+            '0': '₀', '1': '₁', '2': '₂', '3': '₃', '4': '₄', '5': '₅', '6': '₆', '7': '₇', '8': '₈', '9': '₉' // Subscripts for numbers
+        };
+
+        // Function to convert text to "small caps" Unicode
+        function convertToSmallCaps(text) {
+            return text.split('').map(char => smallCapsMap[char] || char).join('');
+        }
+
+        // Function to update the small caps text
+        function updateSmallCapsText() {
+            const inputText = smallCapsTextInput.value;
+            displaySmallCapsText.innerHTML = convertToSmallCaps(inputText);
+        }
+
+        // Event listener to update the preview in real-time
+        smallCapsTextInput.addEventListener('input', updateSmallCapsText);
+
+        // Call the function on page load to initialize with empty input
+        window.onload = updateSmallCapsText;
+    </script>
+</body>
+</html>
